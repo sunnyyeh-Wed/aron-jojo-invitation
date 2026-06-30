@@ -337,8 +337,9 @@
             <div class="mx-auto max-w-[360px] text-center">
                 <img src="Aron-JoJo-Wedding-Invitation.jpg" alt="Aron and JoJo Wedding Invitation" class="w-full rounded-lg shadow-[0_12px_30px_rgba(58,59,88,0.12)] border border-white/80">
                 <a href="Aron-JoJo-Wedding-Invitation.jpg" data-download-url="Aron-JoJo-Wedding-Invitation.jpg" download="Aron-JoJo-Wedding-Invitation.jpg" onclick="downloadInvitation(event, this)" target="_blank" rel="noopener" class="inline-flex items-center justify-center mt-6 px-8 py-3 bg-[#3a3b58] hover:bg-[#2a2b40] text-white rounded-full text-sm font-bold tracking-widest transition duration-300 shadow-lg shadow-[#3a3b58]/30">
-                    <i class="fa-solid fa-download mr-2"></i> 下載電子喜帖
+                    <i class="fa-solid fa-download mr-2"></i> 儲存／分享電子喜帖
                 </a>
+                <p class="mt-3 text-xs text-gray-500 leading-relaxed">iPhone/iPad 若沒有直接存入相簿，請在開啟的分享面板選擇儲存圖片，或開啟圖片後長按儲存。</p>
             </div>
         </section>
         <!-- Footer -->
@@ -360,6 +361,13 @@
             try {
                 const response = await fetch(source, { cache: 'no-store' });
                 const blob = await response.blob();
+                const file = new File([blob], filename, { type: blob.type || 'image/jpeg' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+                    await navigator.share({ files: [file], title: 'Aron & JoJo Wedding Invitation' });
+                    return;
+                }
+
                 const objectUrl = URL.createObjectURL(blob);
                 const temporaryLink = document.createElement('a');
                 temporaryLink.href = objectUrl;
